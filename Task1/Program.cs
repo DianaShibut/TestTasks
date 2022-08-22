@@ -1,6 +1,8 @@
 ﻿string No = "Нет.";
+string Yes = "Да, ";
 
-bool IsSimpleNumber(int number)
+//Функция для проверки числа на простоту
+bool IsSimpleNumber(int number) 
 {
     if (number == 1)
     {
@@ -20,7 +22,8 @@ bool IsSimpleNumber(int number)
     return true;
 }
 
-int GetNextSimpleNumber(int number)
+//Функция для получения ближайшего следующего простого числа
+int GetNextSimpleNumber(int number) 
 {
     do
     {
@@ -31,8 +34,8 @@ int GetNextSimpleNumber(int number)
     return number;
 }
 
-
-int GetFirstSimpleDivisor(int number)
+//Функция для получения первого простого делителя числа
+int GetFirstSimpleDivisor(int number) 
 {
     int divisor = 2;
     while (number % divisor != 0)
@@ -44,6 +47,7 @@ int GetFirstSimpleDivisor(int number)
 }
 
 
+//Функция для проверки числа на разложение в три последовательных простых делителя 
 string GetSimpleDivisors1(int number)
 {
     if(number == 1)
@@ -52,20 +56,20 @@ string GetSimpleDivisors1(int number)
     }
     else
     {
-        int firstDevisor = GetFirstSimpleDivisor(number);
-        if (firstDevisor == number)
+        int firstDivisor = GetFirstSimpleDivisor(number);
+        if (firstDivisor == number)
         {
             return No;
         }
         else
         {
-            int secondDevisor = GetNextSimpleNumber(firstDevisor);
-            int thirdDevisor = GetNextSimpleNumber(secondDevisor);
-            if (number % secondDevisor == 0 &&
-                number % thirdDevisor == 0 &&
-                firstDevisor * secondDevisor * thirdDevisor == number)
+            int secondDivisor = GetNextSimpleNumber(firstDivisor);
+            int thirdDivisor = GetNextSimpleNumber(secondDivisor);
+            if (number % secondDivisor == 0 &&
+                number % thirdDivisor == 0 &&
+                firstDivisor * secondDivisor * thirdDivisor == number)
             {
-                return $"Да, {firstDevisor} * {secondDevisor} * {thirdDevisor} = {number}";
+                return Yes + $"{firstDivisor} * {secondDivisor} * {thirdDivisor} = {number}";
             }
             else
             {
@@ -75,18 +79,19 @@ string GetSimpleDivisors1(int number)
     }
 }
 
-string GetSimpleDivisors2(int number, int devisor, int count)
+//Функция для проверки числа на разложение в count последовательных простых делителя 
+string GetSimpleDivisors2(int number, int divisor, int count)
 {
-    if (number % devisor == 0)
+    if (number % divisor == 0)
     {
         if (count > 1)
         {
-            string response = GetSimpleDivisors2(number / devisor, GetNextSimpleNumber(devisor), count - 1);
-            return response == No ? response : $"{devisor} * {response}";
+            string response = GetSimpleDivisors2(number / divisor, GetNextSimpleNumber(divisor), count - 1);
+            return response == No ? response : $"{divisor} * {response}";
         }
         else
         {
-            return number == devisor ? $"{devisor}" : No;
+            return number == divisor ? $"{divisor}" : No;
         }
     }
     else
@@ -106,9 +111,12 @@ while (true)
         Console.Write("Введенное число - ");
     }
 
+    //Проверка числа на разложение в 3 последовательных простых делителя первым способом
     Console.WriteLine($"Ответ - {GetSimpleDivisors1(number)}");
-    string divisors = (number==1) ? No : GetSimpleDivisors2(number, GetFirstSimpleDivisor(number), 3);
-    Console.WriteLine($"Ответ - " + (divisors != No ? $"Да, {divisors} = {number}": divisors) + "\n");
+
+    //Проверка числа на разложение в 3 последовательных простых делителя вторым более универсальным способом
+    string divisors = (number == 1) ? No : GetSimpleDivisors2(number, GetFirstSimpleDivisor(number), 3);
+    Console.WriteLine($"Ответ - " + (divisors != No ? Yes + $"{divisors} = {number}": divisors) + "\n");
 }
 
 
